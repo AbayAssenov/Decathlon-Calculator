@@ -25,4 +25,11 @@ public class Athlets {
     public void setAthlets(List<Athlet> athlets) {
         this.athlets = athlets;
     }
+
+    @Override
+    public String toString() {
+        return "Athlets{" +
+                "athlets=" + athlets +
+                '}';
+    }
 }

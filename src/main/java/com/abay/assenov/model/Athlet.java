@@ -106,8 +106,13 @@ public class Athlet implements Comparable<Athlet>{
         return decathlon1500M;
     }
 
+    /*
+    * additional logic remove empty space
+    * */
     public void setDecathlon1500M(String decathlon1500M) {
-        this.decathlon1500M = decathlon1500M;
+        if (Objects.nonNull(decathlon1500M)) {
+            this.decathlon1500M = decathlon1500M.trim();
+        }
     }
 
     public Double getTotalScore() {

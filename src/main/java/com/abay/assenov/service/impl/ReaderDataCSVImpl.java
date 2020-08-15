@@ -1,6 +1,6 @@
 package com.abay.assenov.service.impl;
 
-import com.abay.assenov.service.ReaderDataCSV;
+import com.abay.assenov.service.ReaderData;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ReaderDataCSVImpl implements ReaderDataCSV {
+public class ReaderDataCSVImpl implements ReaderData {
     @Override
     public List<String> readAsListString(String pathToFile) {
 

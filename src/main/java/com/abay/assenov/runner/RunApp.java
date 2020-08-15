@@ -1,10 +1,7 @@
 package com.abay.assenov.runner;
 
 import com.abay.assenov.service.CalculatorDecathlon;
-import com.abay.assenov.service.impl.CalculatorDecathlonImpl;
-import com.abay.assenov.service.impl.PropertyServiceImpl;
-import com.abay.assenov.service.impl.ReaderDataCSVImpl;
-import com.abay.assenov.service.impl.WriterDataXMLImpl;
+import com.abay.assenov.service.impl.*;
 
 import static com.abay.assenov.constant.Contstans.FIRST_ARGUMENT;
 import static com.abay.assenov.constant.Contstans.ZERO_LENGTH;
@@ -17,7 +14,8 @@ public class RunApp {
 
             CalculatorDecathlon calculatorDecathlon = new CalculatorDecathlonImpl(new ReaderDataCSVImpl(),
                     new WriterDataXMLImpl<>(),
-                    new PropertyServiceImpl());
+                    new PropertyServiceImpl(),
+                    new MapperModeAthletImpl());
 
             calculatorDecathlon.execute(pathToFile);
 

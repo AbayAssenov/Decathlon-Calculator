@@ -2,7 +2,7 @@ package com.abay.assenov.service;
 
 import java.util.List;
 
-public interface ReaderDataCSV {
+public interface ReaderData {
 
     List<String> readAsListString(String pathToFile);
 }

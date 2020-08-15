@@ -1,13 +1,13 @@
 package com.abay.assenov.service.impl;
 
-import com.abay.assenov.service.WriterDataXML;
+import com.abay.assenov.service.WriterData;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.nio.file.Paths;
 
-public class WriterDataXMLImpl<T> implements WriterDataXML<T> {
+public class WriterDataXMLImpl<T> implements WriterData<T> {
 
     @Override
     public void marshaling(String path, String fileName, T content, Class classs) {

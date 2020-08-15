@@ -2,14 +2,9 @@ package com.abay.assenov.service.impl;
 
 import com.abay.assenov.model.Athlet;
 import com.abay.assenov.model.Athlets;
-import com.abay.assenov.service.CalculatorDecathlon;
-import com.abay.assenov.service.PropertyService;
-import com.abay.assenov.service.ReaderDataCSV;
-import com.abay.assenov.service.WriterDataXML;
+import com.abay.assenov.service.*;
 import com.abay.assenov.util.ServiceUtil;
 
-
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -20,19 +15,22 @@ import static com.abay.assenov.util.ServiceUtil.scoreDecathlonPointSystem;
 
 public class CalculatorDecathlonImpl implements CalculatorDecathlon {
 
-    private ReaderDataCSV readerDataCSV;
-    private WriterDataXML<Athlets> writerDataXML;
+    private ReaderData readerDataCSV;
+    private WriterData<Athlets> writerDataXML;
     private PropertyService propertyService;
+    private MapperModel<Athlet> mapperModel;
 
-    public CalculatorDecathlonImpl(ReaderDataCSV readerDataCSV, WriterDataXMLImpl<Athlets> writerDataXML, PropertyService propertyService) {
+    public CalculatorDecathlonImpl(ReaderData readerDataCSV,
+                                   WriterData<Athlets> writerDataXML,
+                                   PropertyService propertyService,
+                                   MapperModel<Athlet> mapperModel) {
         this.readerDataCSV = readerDataCSV;
         this.writerDataXML = writerDataXML;
         this.propertyService = propertyService;
+        this.mapperModel = mapperModel;
     }
 
-    private List<Athlet> calculate(List<String> content) {
-
-        List<Athlet> athlets = parseAthletsData(content);
+    private List<Athlet> calculate(List<Athlet> athlets) {
 
         for (Athlet athlet : athlets) {
 
@@ -106,41 +104,17 @@ public class CalculatorDecathlonImpl implements CalculatorDecathlon {
         }
     }
 
-    private List<Athlet> parseAthletsData(List<String> content) {
-        List<Athlet> athlets = new ArrayList<>();
-
-        for (String record : content) {
-            if (record.trim().isEmpty()) return athlets;
-
-            String[] splited = record.split(DEFAULT_SEPARATOR);
-
-            Athlet athlet = new Athlet();
-            athlet.setName(splited[DECATHLON_NAME]);
-            athlet.setDecathlon100M(Double.valueOf(splited[DECATHLON_100_M]));
-            athlet.setDecathlonLongJump(Double.valueOf(splited[DECATHLON_LONG_JUMP]));
-            athlet.setDecathlonShotPut(Double.valueOf(splited[DECATHLON_SHOT_PUT]));
-            athlet.setDecathlonHighJump(Double.valueOf(splited[DECATHLON_HIGH_JUMP]));
-            athlet.setDecathlon400M(Double.valueOf(splited[DECATHLON_400_M]));
-            athlet.setDecathlon110MHurdles(Double.valueOf(splited[DECATHLON_110_M_HURDLES]));
-            athlet.setDecathlonDiscussThrow(Double.valueOf(splited[DECATHLON_DISCUSS_THROW]));
-            athlet.setDecathlonPoleVault(Double.valueOf(splited[DECATHLON_POLE_VAULT]));
-            athlet.setDecathlonJavelinThrow(Double.valueOf(splited[DECATHLON_JAVELIN_THROW]));
-            athlet.setDecathlon1500M(splited[DECATHLON_1500_M]);
-            athlets.add(athlet);
-        }
-
-        return athlets;
-    }
-
-
     public void execute(String pathToDataFile) {
 
         List<String> content = readerDataCSV.readAsListString(pathToDataFile); // getting raw data
 
-        List<Athlet> result = calculate(content); // do the calculation from the received data
+        List<Athlet> athlets = mapperModel.mapDataFromListString(content); // get Data
+
+        List<Athlet> result = calculate(athlets); // do the calculation from the received data
 
         String saveResultPath = propertyService.getPropertyValue(CONFIG_PROPERTIES, DEFAULT_SAVE_RESULT_PATH);
         String fileResultName = propertyService.getPropertyValue(CONFIG_PROPERTIES, DEFAULT_NAME_RESULT_FILE);
+
         writerDataXML.marshaling(saveResultPath, fileResultName, new Athlets(result), Athlets.class); // save the result
     }
 
